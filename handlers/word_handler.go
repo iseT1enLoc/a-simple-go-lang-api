@@ -10,7 +10,23 @@ import (
 )
 
 func GetAllWords(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, database.WordList)
+	Id := c.Param("topic_id")
+	if len(Id) == 0 {
+		c.IndentedJSON(http.StatusOK, database.WordList)
+		return
+	}
+	//Id, _ := strconv.Atoi(temp)
+	var wordlist []models.Word
+	for _, word := range database.WordList {
+		if word.TopicID == Id {
+			wordlist = append(wordlist, word)
+		}
+	}
+	if len(wordlist) == 0 {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "do not have that words"})
+		return
+	}
+	c.IndentedJSON(http.StatusOK, wordlist)
 }
 
 func WordById(c *gin.Context) {
@@ -30,4 +46,14 @@ func GetWordById(Id string) (*models.Word, error) {
 		}
 	}
 	return nil, errors.New("word not found in database")
+}
+func CreateWord(c *gin.Context) {
+	var word models.Word
+
+	if err := c.BindJSON(&word); err != nil {
+		c.IndentedJSON(http.StatusBadGateway, gin.H{"message": "Can not create word"})
+		return
+	}
+	database.WordList = append(database.WordList, word)
+	c.IndentedJSON(http.StatusOK, word)
 }

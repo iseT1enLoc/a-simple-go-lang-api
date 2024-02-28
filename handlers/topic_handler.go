@@ -24,7 +24,6 @@ func CreateTopic(c *gin.Context) {
 	database.TopicList = append(database.TopicList, new_topic)
 	c.IndentedJSON(http.StatusCreated, new_topic)
 }
-
 func TopicById(c *gin.Context) {
 	id := c.Param("id")
 	topic, err := GetTopicById(id)

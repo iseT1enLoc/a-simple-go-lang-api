@@ -1,2 +1,3 @@
 curl localhost:8080/topics --include --header "Content-Type: application/json" -d @body.json --request "POST"
 curl localhost:8080/topics
+curl localhost:8080/words --include --header "Content-Type: application/json" -d @body_word.json --request "POST"
